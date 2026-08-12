@@ -1,20 +1,12 @@
 {
-  "name": "Fitness Pal \u00b7 30 Day Journey V2.2",
+  "name": "Fitness Pal · 30 Day Journey",
   "short_name": "Fitness Pal",
-  "start_url": "./?v=22",
+  "start_url": "./?v=4",
   "display": "standalone",
-  "background_color": "#080b0f",
-  "theme_color": "#0b0f14",
+  "background_color": "#090c10",
+  "theme_color": "#090c10",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
   ]
 }
