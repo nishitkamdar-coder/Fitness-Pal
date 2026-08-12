@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#101318" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="30 Day Cut" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>30 Day Weight Journey</title>
+  <style>
+    :root{
+      --bg:#0b0e12;--card:#141920;--card2:#191f27;--text:#f4f7fb;--muted:#98a2b3;
+      --line:#27303b;--accent:#8ee3a2;--accent2:#7cc8ff;--warn:#ffd27d;--danger:#ff8d8d;
+      --radius:20px;--shadow:0 10px 28px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}
+    body{padding-bottom:92px}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:600px;margin:0 auto}
+    header{position:sticky;top:0;z-index:10;padding:max(14px,env(safe-area-inset-top)) 16px 12px;background:linear-gradient(180deg,rgba(11,14,18,.98),rgba(11,14,18,.88),rgba(11,14,18,0));backdrop-filter:blur(14px)}
+    .headrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .eyebrow{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    h1{margin:2px 0 0;font-size:24px;line-height:1.1}
+    .iconbtn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+    main{padding:6px 14px 22px}
+    .hero{background:linear-gradient(145deg,#18221d,#121821 62%,#17202b);border:1px solid #26332b;border-radius:26px;padding:18px;box-shadow:var(--shadow)}
+    .heroTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    .big{font-size:34px;font-weight:760;letter-spacing:-.04em}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
+    .pill{border:1px solid #2f4335;background:#17251b;color:#bdf3c9;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:650;white-space:nowrap}
+    .progressTrack{height:10px;background:#25302a;border-radius:999px;margin-top:16px;overflow:hidden}
+    .progressFill{height:100%;background:linear-gradient(90deg,var(--accent),#c9f5d2);border-radius:999px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .stat .n{font-size:22px;font-weight:750}
+    .stat .l{font-size:12px;color:var(--muted);margin-top:3px}
+    .sectionTitle{display:flex;justify-content:space-between;align-items:end;margin:22px 2px 10px}
+    .sectionTitle h2{margin:0;font-size:17px}
+    .sectionTitle span{font-size:12px;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px;margin-bottom:10px}
+    .card h3{font-size:15px;margin:0 0 8px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .row + .row{margin-top:10px}
+    .field{display:flex;flex-direction:column;gap:5px;flex:1}
+    label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    input,select,textarea{width:100%;background:#0f1318;color:var(--text);border:1px solid var(--line);border-radius:13px;padding:11px 12px;outline:none}
+    textarea{min-height:78px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:#4d657d}
+    .btn{border:0;background:var(--accent);color:#0a130d;font-weight:760;padding:12px 14px;border-radius:14px}
+    .btn.secondary{background:#202832;color:var(--text);border:1px solid var(--line)}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .btn.full{width:100%}
+    .meal{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+    .meal:last-child{border-bottom:0;padding-bottom:0}
+    .check{width:24px;height:24px;border:2px solid #44515f;border-radius:8px;display:grid;place-items:center;margin-top:2px;background:transparent;color:#0a130d;font-weight:900}
+    .check.done{background:var(--accent);border-color:var(--accent)}
+    .mealTitle{font-weight:680;font-size:14px}
+    .mealMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+    .macro{text-align:right;font-size:12px;color:#cbd5e1;white-space:nowrap}
+    .macro b{display:block;font-size:14px;color:var(--text)}
+    .daystrip{display:flex;gap:8px;overflow:auto;padding:3px 0 7px;scrollbar-width:none}
+    .daystrip::-webkit-scrollbar{display:none}
+    .daybtn{min-width:58px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:9px 6px;text-align:center}
+    .daybtn.active{background:#1b2b21;border-color:#43684c}
+    .daybtn .d{font-size:17px;font-weight:760}
+    .daybtn .w{font-size:10px;color:var(--muted);margin-top:2px}
+    .workoutHead{background:linear-gradient(145deg,#1a222d,#151b23);border:1px solid #2b3848;border-radius:22px;padding:16px}
+    .tag{display:inline-block;font-size:11px;color:#c9e8ff;border:1px solid #31516d;background:#172330;padding:6px 9px;border-radius:999px;margin-right:5px;margin-top:6px}
+    .exercise{display:grid;grid-template-columns:auto 1fr;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}
+    .exercise:last-child{border-bottom:0}
+    .exerciseName{font-weight:670;font-size:14px}
+    .exerciseMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
+    .tinyInput{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+    .tinyInput input{padding:8px 9px;border-radius:10px;font-size:12px}
+    .tabs{position:fixed;z-index:30;left:50%;bottom:0;transform:translateX(-50%);width:min(600px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(14,18,23,.96);border-top:1px solid var(--line);padding:8px 6px max(9px,env(safe-area-inset-bottom));backdrop-filter:blur(18px)}
+    .tab{border:0;background:transparent;color:#7f8996;padding:7px 2px;font-size:10px;font-weight:600}
+    .tab b{display:block;font-size:19px;line-height:1.1;margin-bottom:3px;font-weight:500}
+    .tab.active{color:var(--accent)}
+    .view{display:none}.view.active{display:block}
+    .barWrap{background:#252c35;border-radius:999px;height:8px;overflow:hidden}
+    .bar{height:100%;border-radius:999px;background:var(--accent2)}
+    .bar.over{background:var(--danger)}
+    .metricRow{margin:12px 0}
+    .metricTop{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+    .muted{color:var(--muted)}
+    .callout{border:1px solid #4c452b;background:#211f16;color:#f6e8b2;border-radius:16px;padding:12px;font-size:12px;line-height:1.5}
+    .good{border-color:#2f5139;background:#142219;color:#c9f5d2}
+    .danger{border-color:#5c3434;background:#251616;color:#ffc6c6}
+    .recipeSteps{padding-left:18px;color:#d8dee8;font-size:13px;line-height:1.55}
+    details{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+    summary{font-size:13px;font-weight:650;cursor:pointer}
+    .groceryGroup{margin-bottom:16px}
+    .groceryItem{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:9px 0;border-bottom:1px dashed #2a333e;font-size:13px}
+    .groceryItem input{width:20px;height:20px;margin:0}
+    .chart{height:220px;width:100%;background:#10151b;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .legend{font-size:11px;color:var(--muted);display:flex;gap:14px;margin-top:8px}
+    .dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--accent)}
+    .dot.blue{background:var(--accent2)}
+    .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.68);display:none;align-items:flex-end}
+    .modal.show{display:flex}
+    .sheet{width:min(600px,100%);margin:0 auto;background:#11161c;border-radius:24px 24px 0 0;border:1px solid var(--line);padding:18px 16px max(22px,env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+    .sheet h2{margin:0 0 15px;font-size:19px}
+    .close{float:right;border:0;background:#242c35;color:white;width:34px;height:34px;border-radius:10px}
+    .note{font-size:11px;color:var(--muted);line-height:1.45}
+    .sep{height:1px;background:var(--line);margin:14px 0}
+    .miniBadge{font-size:10px;padding:4px 7px;border-radius:999px;background:#232b35;color:#cbd5e1}
+    .navHint{font-size:12px;color:var(--muted);text-align:center;margin:12px 0}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="headrow">
+      <div>
+        <div class="eyebrow" id="headerDate">30-Day Journey</div>
+        <h1 id="headerTitle">Today</h1>
+      </div>
+      <button class="iconbtn" onclick="openSettings()" aria-label="Settings">⚙︎</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="today" class="view active">
+      <div class="hero">
+        <div class="heroTop">
+          <div>
+            <div class="sub" id="dayLabel">DAY 1 OF 30</div>
+            <div class="big"><span id="currentWeightHero">185.5</span> <span style="font-size:18px">lb</span></div>
+            <div class="sub">Ultimate goal <b id="goalHero" style="color:#fff">165 lb</b> · 30-day milestone <b id="milestoneHero" style="color:#fff">177.5 lb</b></div>
+          </div>
+          <div class="pill" id="workoutPill">Recovery</div>
+        </div>
+        <div class="progressTrack"><div class="progressFill" id="goalProgress" style="width:0%"></div></div>
+        <div class="sub" style="margin-top:7px" id="progressText">First morning weigh-in will set your clean baseline.</div>
+      </div>
+
+      <div class="grid2">
+        <div class="stat"><div class="n" id="calRemaining">1,850</div><div class="l">kcal remaining</div></div>
+        <div class="stat"><div class="n" id="proteinRemaining">150g</div><div class="l">protein remaining</div></div>
+        <div class="stat"><div class="n" id="stepsTarget">7,500</div><div class="l">step target</div></div>
+        <div class="stat"><div class="n" id="waterTarget">2.7L</div><div class="l">water target</div></div>
+      </div>
+
+      <div class="sectionTitle"><h2>Morning check-in</h2><span>30 seconds</span></div>
+      <div class="card">
+        <div class="row">
+          <div class="field"><label>Morning weight (lb)</label><input id="weightInput" inputmode="decimal" type="number" step="0.1" placeholder="e.g. 184.8" onchange="saveTodayField('weight',this.value)"></div>
+          <div class="field"><label>Sleep (hours)</label><input id="sleepInput" inputmode="decimal" type="number" step="0.1" placeholder="7.5" onchange="saveTodayField('sleep',this.value)"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Steps</label><input id="stepsInput" inputmode="numeric" type="number" placeholder="Apple Watch" onchange="saveTodayField('steps',this.value)"></div>
+          <div class="field"><label>Water (L)</label><input id="waterInput" inputmode="decimal" type="number" step="0.1" placeholder="2.7" onchange="saveTodayField('water',this.value)"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Apple Watch active kcal (optional)</label><input id="activeCaloriesInput" inputmode="numeric" type="number" placeholder="Optional" onchange="saveTodayField('activeCalories',this.value)"></div>
+        </div>
+      </div>
+
+      <div class="sectionTitle"><h2>Today's food</h2><span id="basePlanLabel">planned base</span></div>
+      <div class="card" id="todayMeals"></div>
+      <button class="btn secondary full" onclick="openExtra()">＋ Add extra food / drink</button>
+
+      <div class="sectionTitle"><h2>Daily balance</h2><span>planned + extras</span></div>
+      <div class="card">
+        <div class="metricRow">
+          <div class="metricTop"><span>Calories</span><b id="calMetric">0 / 1850</b></div>
+          <div class="barWrap"><div id="calBar" class="bar" style="width:0%"></div></div>
+        </div>
+        <div class="metricRow">
+          <div class="metricTop"><span>Protein</span><b id="proteinMetric">0 / 150g</b></div>
+          <div class="barWrap"><div id="proteinBar" class="bar" style="width:0%"></div></div>
+        </div>
+        <div id="extraAdvice" class="callout good">You have flexibility built in. Log unplanned food honestly; one item does not require punishment cardio.</div>
+      </div>
+
+      <div class="sectionTitle"><h2>Tonight</h2><span>recovery matters</span></div>
+      <div class="card">
+        <div class="row"><span>Target bedtime</span><b>11:00 PM</b></div>
+        <div class="row"><span>Target wake time</span><b>6:30 AM → progress toward 6:00</b></div>
+        <div class="note" style="margin-top:10px">For the first week, consistency beats forcing a 6:00 AM workout. Evening training remains the default.</div>
+      </div>
+    </section>
+
+    <section id="plan" class="view">
+      <div class="sectionTitle"><h2>30-day calendar</h2><span>tap any day</span></div>
+      <div class="daystrip" id="dayStrip"></div>
+      <div class="card">
+        <div class="row"><div><div class="mealTitle" id="planDate">Day 1</div><div class="mealMeta" id="planSummary"></div></div><span class="miniBadge" id="planWeek">Week 1</span></div>
+      </div>
+      <div id="planWorkout"></div>
+      <div class="sectionTitle"><h2>Weekly focus</h2><span id="weekFocusLabel">Week 1</span></div>
+      <div class="card" id="weekFocus"></div>
+    </section>
+
+    <section id="workouts" class="view">
+      <div class="sectionTitle"><h2>Workout library</h2><span>tap to open</span></div>
+      <div id="workoutLibrary"></div>
+      <div class="callout good">Newport Swim & Fitness lists a weight room, squat rack, dumbbells, benches, treadmills, bikes and ellipticals. Default exercises use those basics; substitutions are included where useful.</div>
+    </section>
+
+    <section id="meals" class="view">
+      <div class="sectionTitle"><h2>Meal prep</h2><span>Sunday-first</span></div>
+      <div class="card">
+        <h3>Your weekday rhythm</h3>
+        <div class="mealMeta">7:00 AM protein coffee → 10:00 AM prepped breakfast → 2:00 PM lunch → pre-workout fruit → post-workout Nitro-Tech → small protein-focused evening snack.</div>
+      </div>
+      <div id="mealWeeks"></div>
+    </section>
+
+    <section id="progress" class="view">
+      <div class="sectionTitle"><h2>Progress</h2><span>morning weigh-ins</span></div>
+      <div class="card">
+        <div class="chart"><svg id="weightChart" width="100%" height="220" viewBox="0 0 560 220" preserveAspectRatio="none"></svg></div>
+        <div class="legend"><span><i class="dot"></i> Actual</span><span><i class="dot blue"></i> 30-day milestone path</span></div>
+      </div>
+      <div class="grid2">
+        <div class="stat"><div class="n" id="trendWeight">—</div><div class="l">latest morning weight</div></div>
+        <div class="stat"><div class="n" id="weightChange">—</div><div class="l">change from baseline</div></div>
+        <div class="stat"><div class="n" id="avgSteps">—</div><div class="l">average steps logged</div></div>
+        <div class="stat"><div class="n" id="workoutsDone">0</div><div class="l">workouts completed</div></div>
+      </div>
+      <div class="sectionTitle"><h2>Weekly check</h2><span>don't overreact daily</span></div>
+      <div class="card">
+        <div class="mealMeta">Use the 7-day trend, waist/clothing fit, gym performance and consistency — not one random scale reading. Sodium, carbs, hydration and digestion can move scale weight day to day.</div>
+      </div>
+      <div class="sectionTitle"><h2>Data</h2><span>stored on this phone</span></div>
+      <div class="card">
+        <button class="btn secondary full" onclick="exportData()">Export backup (.json)</button>
+        <div style="height:8px"></div>
+        <button class="btn ghost full" onclick="document.getElementById('importFile').click()">Import backup</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)">
+        <div class="note" style="margin-top:10px">Your entries use browser local storage. Export a backup occasionally, especially before clearing Safari data or changing phones.</div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="today" onclick="switchView('today',this)"><b>⌂</b>Today</button>
+    <button class="tab" data-view="plan" onclick="switchView('plan',this)"><b>▦</b>Plan</button>
+    <button class="tab" data-view="workouts" onclick="switchView('workouts',this)"><b>◫</b>Workouts</button>
+    <button class="tab" data-view="meals" onclick="switchView('meals',this)"><b>◉</b>Meals</button>
+    <button class="tab" data-view="progress" onclick="switchView('progress',this)"><b>⌁</b>Progress</button>
+  </nav>
+</div>
+
+<div class="modal" id="extraModal">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('extraModal')">✕</button>
+    <h2>Add an extra</h2>
+    <div class="field"><label>Item</label><input id="extraName" placeholder="e.g. 2 slices pizza"></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>Calories</label><input id="extraCalories" type="number" inputmode="numeric" placeholder="300"></div>
+      <div class="field"><label>Protein (g)</label><input id="extraProtein" type="number" inputmode="decimal" placeholder="12"></div>
+    </div>
+    <div style="height:12px"></div>
+    <button class="btn full" onclick="saveExtra()">Add to today</button>
+    <div class="note" style="margin-top:12px">Use the nutrition label or restaurant listing when available. The app will show the impact without requiring compensatory restriction.</div>
+    <div class="sep"></div>
+    <div id="extraList"></div>
+  </div>
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('settingsModal')">✕</button>
+    <h2>Plan settings</h2>
+    <div class="row">
+      <div class="field"><label>Start date</label><input id="setStartDate" type="date"></div>
+      <div class="field"><label>Starting weight</label><input id="setStartWeight" type="number" step="0.1"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Ultimate goal</label><input id="setGoalWeight" type="number" step="0.1"></div>
+      <div class="field"><label>30-day milestone</label><input id="setMilestoneWeight" type="number" step="0.1"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Training kcal</label><input id="setTrainingCalories" type="number"></div>
+      <div class="field"><label>Rest kcal</label><input id="setRestCalories" type="number"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Protein target (g)</label><input id="setProtein" type="number"></div>
+    </div>
+    <div style="height:12px"></div>
+    <button class="btn full" onclick="saveSettings()">Save settings</button>
+    <div class="note" style="margin-top:12px">Initial calorie targets are estimates. Use 2–3 weeks of morning-weight trend, hunger, energy and training performance before making meaningful changes.</div>
+  </div>
+</div>
+
+<script>
+const DEFAULTS = {
+  startDate:"2026-08-12", startWeight:"", goalWeight:"", milestoneWeight:"",
+  trainingCalories:1950, restCalories:1850, protein:150, water:2.7
+};
+const hadSavedSettings = !!localStorage.getItem("wj_settings");
+let settings = JSON.parse(localStorage.getItem("wj_settings")||"null") || {...DEFAULTS};
+let logs = JSON.parse(localStorage.getItem("wj_logs")||"{}");
+let selectedDay = 1;
+
+const mealWeeks = [
+  {
+    title:"Week 1 · Soy Keema Roti",
+    lunch:{name:"Soy keema + 2 rotis + cucumber raita",cal:720,p:52,desc:"60g dry soy chunks · 70g atta · 250g onion/tomato/peas · 8g oil · 150g nonfat Greek yogurt · spices"},
+    groceries:{
+      "Protein & dairy":["Fairlife fat-free milk — 1.5 L","Nonfat Greek yogurt — ~2.5 kg","Dry soy chunks — 300 g","MuscleTech Nitro-Tech — 5 scoops"],
+      "Carbs & fruit":["Rolled oats — 250 g","Whole-wheat atta — 350 g","Bananas — 5","Berries — 500 g","Whole-grain bread — 5 slices"],
+      "Produce":["Onion — 500 g","Tomatoes — 600 g","Green peas — 300 g","Cucumber — 500 g","Cilantro + mint — 1 bunch each","Lemons — 3"],
+      "Pantry":["Chia seeds — 50 g","PB powder — 75 g","Cooking oil — 40 g","Cumin, garam masala, turmeric, chili, coriander powder, chaat masala"]
+    },
+    prep:[
+      "Boil/soak 300 g dry soy chunks, squeeze very well, then pulse/chop to a keema texture.",
+      "Cook onion, tomato and peas with 40 g oil total and Indian spices; fold in soy. Divide into 5 equal portions.",
+      "Make dough from 350 g atta. Cook 10 rotis. Cool completely before packing.",
+      "Mix raita base from Greek yogurt, cucumber, cumin, salt and mint. Keep Mon–Wed portions refrigerated; make Thu–Fri raita fresh in under 2 minutes or use sealed yogurt cups.",
+      "Refrigerate Mon–Wed lunch portions. Freeze Thu–Fri soy-keema + rotis on Sunday; move one portion to the refrigerator the night before.",
+      "Prepare five dry breakfast jars: 50 g oats + 10 g chia + 15 g PB powder + cinnamon/cardamom. Add 200 g Greek yogurt + 100 g berries the night before or morning of eating."
+    ]
+  },
+  {
+    title:"Week 2 · Tandoori Tofu Bowl",
+    lunch:{name:"Tandoori tofu rice bowl + yogurt chutney",cal:710,p:49,desc:"220g extra-firm tofu · 130g cooked basmati rice · 200g vegetables · 100g Greek-yogurt marinade · 5g oil · lemon + tandoori spices"},
+    groceries:{
+      "Protein & dairy":["Fairlife fat-free milk — 1.5 L","Nonfat Greek yogurt — ~2.3 kg","Extra-firm tofu — 1.1 kg","MuscleTech Nitro-Tech — 5 scoops"],
+      "Carbs & fruit":["Rolled oats — 250 g","Dry basmati rice — ~220 g","Bananas — 5","Berries — 500 g","Whole-grain bread — 5 slices"],
+      "Produce":["Bell peppers — 5","Onions — 3","Broccoli/cauliflower — ~700 g","Cucumber — 2","Cilantro — 1 bunch","Lemons — 4"],
+      "Pantry":["Chia — 50 g","PB powder — 75 g","Oil — 25 g","Tandoori masala, cumin, chili, garlic, ginger"]
+    },
+    prep:[
+      "Press tofu, cube it, and coat with Greek yogurt, lemon, ginger/garlic and tandoori masala.",
+      "Air-fry or bake tofu until browned. Roast peppers, onion and broccoli/cauliflower alongside it.",
+      "Cook basmati rice and weigh 130 g cooked rice into each container.",
+      "Divide tofu and vegetables equally across 5 containers; add fresh yogurt-mint chutney when eating.",
+      "Refrigerate Mon–Wed. Freeze Thu–Fri tofu/rice portions after cooling; thaw overnight in the refrigerator.",
+      "Prepare the same five dry breakfast jars; add yogurt and berries close to eating."
+    ]
+  },
+  {
+    title:"Week 3 · Rajma + Soy Bowl",
+    lunch:{name:"Rajma-soy masala rice bowl + raita",cal:700,p:50,desc:"150g cooked rajma · 40g dry soy chunks · 120g cooked basmati rice · 150g Greek yogurt · 150g vegetables · 5g oil"},
+    groceries:{
+      "Protein & dairy":["Fairlife fat-free milk — 1.5 L","Nonfat Greek yogurt — ~2.5 kg","Dry soy chunks — 200 g","Cooked/drained rajma — 750 g","MuscleTech Nitro-Tech — 5 scoops"],
+      "Carbs & fruit":["Rolled oats — 250 g","Dry basmati rice — ~200 g","Bananas — 5","Berries — 500 g","Whole-grain bread — 5 slices"],
+      "Produce":["Onions — 4","Tomatoes — 6","Cucumber — 3","Spinach — ~300 g","Cilantro — 1 bunch","Lemons — 3"],
+      "Pantry":["Chia — 50 g","PB powder — 75 g","Oil — 25 g","Rajma masala, cumin, coriander, turmeric, chili"]
+    },
+    prep:[
+      "Cook rajma masala with onion, tomato and spices. Keep oil measured to 25 g total for the batch.",
+      "Prepare soy chunks separately, squeeze dry, then fold them into the rajma masala.",
+      "Cook rice and divide 120 g cooked rice into each container.",
+      "Add rajma-soy mixture and spinach/vegetables. Pack raita separately.",
+      "Refrigerate Mon–Wed and freeze Thu–Fri main portions once fully cooled.",
+      "Prepare five breakfast jars as in prior weeks."
+    ]
+  },
+  {
+    title:"Week 4 · Masala Tofu Wraps",
+    lunch:{name:"Masala tofu double-wrap + mint yogurt",cal:730,p:50,desc:"250g extra-firm tofu · 2 medium high-fiber/whole-wheat wraps · 150g peppers/onion · 100g Greek yogurt · 5g oil · mint chutney"},
+    groceries:{
+      "Protein & dairy":["Fairlife fat-free milk — 1.5 L","Nonfat Greek yogurt — ~2.3 kg","Extra-firm tofu — 1.25 kg","MuscleTech Nitro-Tech — 5 scoops"],
+      "Carbs & fruit":["Rolled oats — 250 g","Medium whole-wheat/high-fiber wraps — 10","Bananas — 5","Berries — 500 g","Whole-grain bread — 5 slices"],
+      "Produce":["Bell peppers — 6","Onions — 4","Cabbage/slaw mix — 500 g","Cucumber — 3","Mint + cilantro — 1 bunch each","Limes/lemons — 4"],
+      "Pantry":["Chia — 50 g","PB powder — 75 g","Oil — 25 g","Garam masala, cumin, chili, smoked paprika, chaat masala"]
+    },
+    prep:[
+      "Crumble or cube tofu and cook with onion, peppers, garam masala, cumin, chili and measured oil.",
+      "Cool completely. Divide into 5 filling portions.",
+      "Keep wraps sealed separately so they do not get soggy. Assemble in 2–3 minutes before leaving for work.",
+      "Make a thick mint-yogurt sauce and store in a sealed container; portion with a clean spoon.",
+      "Freeze Thu–Fri tofu filling. Keep wraps dry at room temperature per package instructions.",
+      "Prepare five breakfast jars as in prior weeks."
+    ]
+  }
+];
+
+const baseMeals = {
+  coffee:{name:"Protein coffee",cal:100,p:16,desc:"300 mL Fairlife fat-free ultra-filtered milk + instant coffee. Keep sugar/syrup at 0 or log it as an extra."},
+  breakfast:{name:"10 AM masala protein oats + toast",cal:540,p:39,desc:"50g oats · 200g nonfat Greek yogurt · 100g berries · 10g chia · 15g PB powder · 1 slice whole-grain toast · cinnamon/cardamom."},
+  preworkout:{name:"Pre-workout banana",cal:105,p:1,desc:"~120g edible banana, 45–90 min before training. Skip on full rest days if not hungry."},
+  shake:{name:"Post-workout Nitro-Tech",cal:160,p:30,desc:"1 scoop MuscleTech Nitro-Tech Milk Chocolate in water. The product already contains 3g creatine per scoop."},
+  evening:{name:"Light protein chaat",cal:220,p:24,desc:"200g nonfat Greek yogurt + cucumber/tomato + 20g roasted chana + cumin + chaat masala + cilantro. Keep it small and easy."}
+};
+
+const workouts = {
+  "Active Recovery":{
+    type:"Recovery",duration:"35–50 min",tags:["Easy","Zone 2","Mobility"],
+    exercises:[
+      ["Easy treadmill / elliptical","25–35 min · conversational pace","Keep this truly easy; you should finish fresher than you started."],
+      ["Hip + thoracic mobility","8–10 min","90/90 hip switches, hip-flexor stretch, thoracic rotations, shoulder circles."],
+      ["Optional easy core","2 rounds","Dead bug 8/side + side plank 20–30 sec/side."]
+    ]
+  },
+  "Upper A":{
+    type:"Strength",duration:"60–75 min",tags:["Chest","Back","Shoulders","Arms"],
+    exercises:[
+      ["Dumbbell bench press","3 × 8–12","Stop with ~2–3 reps in reserve in Week 1."],
+      ["One-arm dumbbell row","3 × 8–12 / side","Brace on a bench; pull elbow toward hip."],
+      ["Seated dumbbell shoulder press","2 × 8–12","Controlled reps; no need to grind."],
+      ["Lat pulldown or assisted pull-up","3 × 8–12","If unavailable, add another dumbbell-row variation."],
+      ["Dumbbell lateral raise","2 × 12–15","Light, controlled."],
+      ["Cable pressdown or DB skull crusher","2 × 10–15","Choose the pain-free option."],
+      ["Dumbbell curl","2 × 10–15","Full range; avoid swinging."],
+      ["Incline walk","10–15 min","Easy-to-moderate finish."]
+    ]
+  },
+  "Lower A":{
+    type:"Strength",duration:"60–75 min",tags:["Quads","Glutes","Hamstrings","Core"],
+    exercises:[
+      ["Squat rack squat or goblet squat","3 × 6–10","Use goblet squat if you want an easier re-entry."],
+      ["Dumbbell Romanian deadlift","3 × 8–12","Hips back, neutral spine, feel hamstrings."],
+      ["Bulgarian split squat","2 × 8–10 / leg","Hold dumbbells only if bodyweight is easy."],
+      ["Dumbbell hip thrust","3 × 10–12","Bench-supported; pause at the top."],
+      ["Standing calf raise","3 × 12–15","Slow stretch at bottom."],
+      ["Plank","3 × 30–45 sec","Stop before form breaks."]
+    ]
+  },
+  "Upper B":{
+    type:"Strength",duration:"60–75 min",tags:["Chest","Back","Delts","Arms"],
+    exercises:[
+      ["Incline dumbbell press","3 × 8–12","Moderate incline."],
+      ["Chest-supported dumbbell row","3 × 8–12","Use an incline bench."],
+      ["Push-up","2 × near-comfortable limit","Stop 2 reps before failure."],
+      ["Lat pulldown / assisted pull-up","3 × 8–12","Neutral or comfortable grip."],
+      ["Lateral raise","3 × 12–15","Small rest periods are fine."],
+      ["Hammer curl","2 × 10–15","Neutral grip."],
+      ["Overhead DB triceps extension","2 × 10–15","Keep ribs down."],
+      ["Bike or treadmill","10–15 min","Easy-to-moderate."]
+    ]
+  },
+  "Lower B":{
+    type:"Strength",duration:"60–75 min",tags:["Legs","Posterior chain","Core"],
+    exercises:[
+      ["Romanian deadlift or light rack deadlift","3 × 6–10","Choose the variation you can control cleanly."],
+      ["Front-foot elevated split squat","3 × 8–10 / leg","Dumbbells optional."],
+      ["Goblet squat","3 × 10–12","Controlled tempo."],
+      ["Single-leg Romanian deadlift","2 × 10 / leg","Use light dumbbells and balance support if needed."],
+      ["Calf raise","3 × 12–15","Full range."],
+      ["Dead bug + side plank","3 rounds","8/side + 20–30 sec/side."]
+    ]
+  },
+  "Conditioning + Core":{
+    type:"Conditioning",duration:"40–55 min",tags:["Cardio","Core","Low stress"],
+    exercises:[
+      ["Treadmill / bike / elliptical","30–40 min","Mostly conversational pace; no need for HIIT during the re-entry week."],
+      ["Dead bug","3 × 8–10 / side","Slow and controlled."],
+      ["Side plank","3 × 20–40 sec / side","Straight line from shoulder to ankle."],
+      ["Farmer carry","4 × 30–45 sec","Moderate dumbbells, tall posture."]
+    ]
+  },
+  "Rest":{
+    type:"Rest",duration:"—",tags:["Recovery","Steps","Sleep"],
+    exercises:[
+      ["No lifting","—","Normal movement only. Rest is part of the program."],
+      ["Comfortable walking","Reach your step target","Break it into short walks if easier."],
+      ["Meal prep / sleep","Prioritize recovery","Aim to be in bed around 11 PM."]
+    ]
+  }
+};
+
+// First 30 days: deliberate easy start after 3 consecutive gym days, then a repeatable rhythm.
+const schedule = [
+ "Active Recovery","Upper A","Lower A","Rest","Upper B","Lower B","Conditioning + Core",
+ "Upper A","Lower A","Active Recovery","Upper B","Lower B","Conditioning + Core","Rest",
+ "Upper A","Lower A","Active Recovery","Upper B","Lower B","Conditioning + Core","Rest",
+ "Upper A","Lower A","Active Recovery","Upper B","Lower B","Conditioning + Core","Rest",
+ "Upper A","Lower A"
+];
+
+const weekFocuses = [
+  "<b>Re-entry week:</b> keep 2–3 reps in reserve, learn your current working weights, and prioritize soreness management. Step target starts at 7,500/day.",
+  "<b>Build consistency:</b> aim for 3 working sets on main lifts when recovery is good. Step target moves to 8,000/day.",
+  "<b>Progress gently:</b> add 1–2 reps or a small amount of weight only when all prescribed reps are clean. Step target 8,500/day.",
+  "<b>Finish strong, not exhausted:</b> maintain quality, avoid maxes/failure, and keep the routine repeatable. Step target 9,000/day."
+];
+
+function dateForDay(day){
+  const d = new Date(settings.startDate+"T12:00:00");
+  d.setDate(d.getDate()+day-1);
+  return d;
+}
+function currentDay(){
+  const s = new Date(settings.startDate+"T00:00:00");
+  const now = new Date();
+  const diff = Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-new Date(s.getFullYear(),s.getMonth(),s.getDate()))/86400000)+1;
+  return Math.min(30,Math.max(1,diff));
+}
+function weekForDay(day){return Math.min(4,Math.ceil(day/7))}
+function stepTarget(day){const w=weekForDay(day);return [7500,8000,8500,9000][w-1]}
+function logKey(day){return String(day)}
+function getLog(day){
+  if(!logs[logKey(day)]) logs[logKey(day)]={meals:{},extras:[],exercises:{},sets:{}};
+  return logs[logKey(day)];
+}
+function saveLogs(){localStorage.setItem("wj_logs",JSON.stringify(logs))}
+function saveSettingsStore(){localStorage.setItem("wj_settings",JSON.stringify(settings))}
+function isRestWorkout(name){return name==="Rest" || name==="Active Recovery"}
+function calorieTarget(day){return isRestWorkout(schedule[day-1]) ? settings.restCalories : settings.trainingCalories}
+
+function mealsForDay(day){
+  const w=weekForDay(day)-1;
+  const arr=[{id:"coffee",...baseMeals.coffee},{id:"breakfast",...baseMeals.breakfast},{id:"lunch",...mealWeeks[w].lunch}];
+  if(!isRestWorkout(schedule[day-1]) && schedule[day-1]!=="Conditioning + Core") arr.push({id:"preworkout",...baseMeals.preworkout});
+  if(schedule[day-1]!=="Rest") arr.push({id:"shake",...baseMeals.shake});
+  arr.push({id:"evening",...baseMeals.evening});
+  return arr;
+}
+function plannedTotals(day){
+  return mealsForDay(day).reduce((a,m)=>({cal:a.cal+m.cal,p:a.p+m.p}),{cal:0,p:0});
+}
+function consumedTotals(day){
+  const l=getLog(day); let cal=0,p=0;
+  mealsForDay(day).forEach(m=>{if(l.meals[m.id]){cal+=m.cal;p+=m.p}});
+  (l.extras||[]).forEach(e=>{cal+=Number(e.cal)||0;p+=Number(e.p)||0});
+  return {cal,p};
+}
+function extrasTotal(day){return (getLog(day).extras||[]).reduce((a,e)=>a+(Number(e.cal)||0),0)}
+function latestWeight(){
+  let found=null;
+  for(let i=1;i<=30;i++){const w=parseFloat(getLog(i).weight);if(w)found=w}
+  return found || Number(settings.startWeight) || 0;
+}
+function baselineWeight(){
+  for(let i=1;i<=30;i++){const w=parseFloat(getLog(i).weight);if(w)return w}
+  return Number(settings.startWeight) || 0;
+}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})}
+
+function renderToday(){
+  const day=currentDay(); selectedDay=day; const l=getLog(day), wt=latestWeight();
+  document.getElementById("headerDate").textContent=fmtDate(dateForDay(day));
+  document.getElementById("headerTitle").textContent="Today";
+  document.getElementById("dayLabel").textContent=`DAY ${day} OF 30`;
+  document.getElementById("currentWeightHero").textContent=wt?wt.toFixed(1):"—";
+  document.getElementById("goalHero").textContent=settings.goalWeight?(settings.goalWeight+" lb"):"Set goal";
+  document.getElementById("milestoneHero").textContent=settings.milestoneWeight?(settings.milestoneWeight+" lb"):"Set milestone";
+  document.getElementById("workoutPill").textContent=schedule[day-1];
+  const start=baselineWeight(), milestone=Number(settings.milestoneWeight)||0, denom=start-milestone, pct=(start&&wt&&denom>0)?Math.max(0,Math.min(100,(start-wt)/denom*100)):0;
+  document.getElementById("goalProgress").style.width=pct+"%";
+  document.getElementById("progressText").textContent=(Object.values(logs).some(x=>parseFloat(x.weight))) ? `${Math.max(0,start-wt).toFixed(1)} lb down from your morning baseline · ${pct.toFixed(0)}% toward the 30-day milestone` : "Enter your first morning weight to set the clean baseline.";
+  document.getElementById("stepsTarget").textContent=stepTarget(day).toLocaleString();
+  document.getElementById("waterTarget").textContent=settings.water.toFixed(1)+"L";
+
+  ["weight","sleep","steps","water","activeCalories"].forEach(k=>{
+    const el=document.getElementById(k+"Input");
+    if(el)el.value=l[k]??"";
+  });
+  const mealBox=document.getElementById("todayMeals");mealBox.innerHTML="";
+  mealsForDay(day).forEach(m=>{
+    const done=!!l.meals[m.id];
+    const div=document.createElement("div");div.className="meal";
+    div.innerHTML=`<button class="check ${done?'done':''}" onclick="toggleMeal(${day},'${m.id}')">${done?'✓':''}</button>
+      <div><div class="mealTitle">${m.name}</div><div class="mealMeta">${m.desc}</div></div>
+      <div class="macro"><b>${m.cal}</b>kcal<br>${m.p}g P</div>`;
+    mealBox.appendChild(div);
+  });
+  const plan=plannedTotals(day);
+  document.getElementById("basePlanLabel").textContent=`base ${plan.cal} kcal · ${plan.p}g P`;
+  updateBalance(day);
+}
+function updateBalance(day){
+  const t=consumedTotals(day), target=calorieTarget(day), protein=settings.protein;
+  document.getElementById("calRemaining").textContent=Math.max(0,target-t.cal).toLocaleString();
+  document.getElementById("proteinRemaining").textContent=Math.max(0,protein-t.p)+"g";
+  document.getElementById("calMetric").textContent=`${t.cal} / ${target}`;
+  document.getElementById("proteinMetric").textContent=`${t.p} / ${protein}g`;
+  const cp=Math.min(120,t.cal/target*100), pp=Math.min(100,t.p/protein*100);
+  const cb=document.getElementById("calBar");cb.style.width=Math.min(100,cp)+"%";cb.classList.toggle("over",t.cal>target);
+  document.getElementById("proteinBar").style.width=pp+"%";
+  const over=Math.max(0,t.cal-target), extras=extrasTotal(day), box=document.getElementById("extraAdvice");
+  if(over>0){
+    box.className="callout danger";
+    box.innerHTML=`You are about <b>${over} kcal over today's target</b>. Do not crash-restrict tomorrow. Keep the next meal normal and protein-focused. If you feel good, an optional 20–40 minute walk can add activity, but Apple Watch calorie estimates are only estimates and you do not need to “erase” the food.`;
+  } else if(extras>0){
+    box.className="callout";
+    box.innerHTML=`You logged <b>${extras} extra kcal</b> and are still within today's target. Keep the rest of the plan normal; no compensation is needed.`;
+  } else {
+    box.className="callout good";
+    box.textContent="You have flexibility built in. Log unplanned food honestly; one item does not require punishment cardio.";
+  }
+}
+function saveTodayField(field,value){
+  const day=currentDay(), l=getLog(day);l[field]=value;saveLogs();renderProgress();renderToday();
+}
+function toggleMeal(day,id){const l=getLog(day);l.meals[id]=!l.meals[id];saveLogs();renderToday()}
+function toggleExercise(day,idx){const l=getLog(day);l.exercises[idx]=!l.exercises[idx];saveLogs();renderPlanDay(day);renderProgress()}
+function saveSet(day,idx,field,val){const l=getLog(day);l.sets[idx]=l.sets[idx]||{};l.sets[idx][field]=val;saveLogs()}
+function workoutCompleted(day){
+  const ex=workouts[schedule[day-1]].exercises;
+  if(schedule[day-1]==="Rest") return false;
+  return ex.length>0 && ex.every((_,i)=>getLog(day).exercises[i]);
+}
+
+function renderDayStrip(){
+  const strip=document.getElementById("dayStrip");strip.innerHTML="";
+  for(let i=1;i<=30;i++){
+    const d=dateForDay(i), b=document.createElement("button");b.className="daybtn "+(i===selectedDay?"active":"");
+    b.innerHTML=`<div class="d">${i}</div><div class="w">${d.toLocaleDateString(undefined,{weekday:"short"})}</div>`;
+    b.onclick=()=>{selectedDay=i;renderDayStrip();renderPlanDay(i);};
+    strip.appendChild(b);
+  }
+  setTimeout(()=>{const a=strip.querySelector(".active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})},50);
+}
+function renderPlanDay(day){
+  const d=dateForDay(day), w=weekForDay(day), name=schedule[day-1], wo=workouts[name], l=getLog(day);
+  document.getElementById("planDate").textContent=`Day ${day} · ${fmtDate(d)}`;
+  document.getElementById("planSummary").textContent=`${name} · ${calorieTarget(day)} kcal · ${settings.protein}g protein · ${stepTarget(day).toLocaleString()} steps`;
+  document.getElementById("planWeek").textContent=`Week ${w}`;
+  const box=document.getElementById("planWorkout");
+  box.innerHTML=`<div class="workoutHead"><div class="sub">${wo.type.toUpperCase()}</div><h2 style="margin:5px 0 0">${name}</h2><div class="sub" style="margin-top:5px">${wo.duration}</div><div>${wo.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div></div>
+  <div class="card" style="margin-top:10px">${wo.exercises.map((e,i)=>{
+    const done=!!l.exercises[i], set=l.sets[i]||{};
+    return `<div class="exercise"><button class="check ${done?'done':''}" onclick="toggleExercise(${day},${i})">${done?'✓':''}</button>
+      <div><div class="exerciseName">${e[0]}</div><div class="exerciseMeta"><b>${e[1]}</b><br>${e[2]}</div>
+      ${wo.type==="Strength"?`<div class="tinyInput"><input placeholder="weight used" value="${set.weight||''}" onchange="saveSet(${day},${i},'weight',this.value)"><input placeholder="reps / notes" value="${set.reps||''}" onchange="saveSet(${day},${i},'reps',this.value)"></div>`:""}
+      </div></div>`}).join("")}</div>`;
+  document.getElementById("weekFocusLabel").textContent=`Week ${w}`;
+  document.getElementById("weekFocus").innerHTML=`<div class="mealMeta">${weekFocuses[w-1]}</div>`;
+}
+function renderWorkoutLibrary(){
+  const box=document.getElementById("workoutLibrary");box.innerHTML="";
+  Object.entries(workouts).forEach(([name,wo])=>{
+    const d=document.createElement("div");d.className="card";
+    d.innerHTML=`<div class="row"><div><h3>${name}</h3><div class="mealMeta">${wo.type} · ${wo.duration}</div></div><span class="miniBadge">${wo.exercises.length} items</span></div>
+      <details><summary>Open exercises</summary>${wo.exercises.map(e=>`<div class="exercise"><div style="width:5px"></div><div><div class="exerciseName">${e[0]}</div><div class="exerciseMeta"><b>${e[1]}</b><br>${e[2]}</div></div></div>`).join("")}</details>`;
+    box.appendChild(d);
+  })
+}
+function renderMeals(){
+  const box=document.getElementById("mealWeeks");box.innerHTML="";
+  mealWeeks.forEach((w,idx)=>{
+    const d=document.createElement("div");d.className="card";
+    d.innerHTML=`<div class="row"><div><h3>${w.title}</h3><div class="mealMeta">${w.lunch.name}<br><b style="color:#fff">${w.lunch.cal} kcal · ${w.lunch.p}g protein</b></div></div><span class="miniBadge">5 lunches</span></div>
+      <details><summary>Exact per-serving weights</summary><div class="mealMeta" style="margin-top:9px">${w.lunch.desc}</div></details>
+      <details><summary>Sunday prep instructions</summary><ol class="recipeSteps">${w.prep.map(s=>`<li>${s}</li>`).join("")}</ol></details>
+      <details><summary>Grocery list</summary><div style="margin-top:8px">${Object.entries(w.groceries).map(([g,items])=>`<div class="groceryGroup"><div class="eyebrow">${g}</div>${items.map((it,i)=>`<label class="groceryItem"><input type="checkbox" data-grocery="${idx}-${g}-${i}" onchange="saveGrocery(this)"><span>${it}</span><span></span></label>`).join("")}</div>`).join("")}</div></details>`;
+    box.appendChild(d);
+  });
+  restoreGroceries();
+}
+function saveGrocery(el){localStorage.setItem("g_"+el.dataset.grocery,el.checked?"1":"0")}
+function restoreGroceries(){document.querySelectorAll("[data-grocery]").forEach(el=>el.checked=localStorage.getItem("g_"+el.dataset.grocery)==="1")}
+
+function renderProgress(){
+  const weights=[];
+  for(let i=1;i<=30;i++){const w=parseFloat(getLog(i).weight);if(w)weights.push({day:i,w})}
+  const svg=document.getElementById("weightChart"); if(!svg)return;
+  const W=560,H=220,pad=28, start=baselineWeight(), end=settings.milestoneWeight;
+  const safeStart=start||185, safeEnd=Number(end)||safeStart-8;
+  const vals=weights.map(x=>x.w).concat([safeStart,safeEnd]); const min=Math.min(...vals)-1,max=Math.max(...vals)+1;
+  const x=d=>pad+(d-1)/(29)*(W-pad*2), y=v=>H-pad-(v-min)/(max-min)*(H-pad*2);
+  const targetPts=`${x(1)},${y(safeStart)} ${x(30)},${y(safeEnd)}`;
+  let actual=weights.map(z=>`${x(z.day)},${y(z.w)}`).join(" ");
+  let circles=weights.map(z=>`<circle cx="${x(z.day)}" cy="${y(z.w)}" r="4" fill="#8ee3a2"/>`).join("");
+  svg.innerHTML=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#27303b"/>
+    <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#27303b"/>
+    <polyline points="${targetPts}" fill="none" stroke="#7cc8ff" stroke-width="2" stroke-dasharray="7 6"/>
+    ${weights.length?`<polyline points="${actual}" fill="none" stroke="#8ee3a2" stroke-width="3"/>${circles}`:""}
+    <text x="${pad}" y="18" fill="#98a2b3" font-size="11">${max.toFixed(1)} lb</text>
+    <text x="${pad}" y="${H-7}" fill="#98a2b3" font-size="11">${min.toFixed(1)} lb</text>
+    <text x="${W-pad-40}" y="${H-7}" fill="#98a2b3" font-size="11">Day 30</text>`;
+  const latest=weights.length?weights[weights.length-1].w:null, base=weights.length?weights[0].w:null;
+  document.getElementById("trendWeight").textContent=latest?latest.toFixed(1)+" lb":"—";
+  document.getElementById("weightChange").textContent=(latest&&base)?`${latest-base>=0?"+":""}${(latest-base).toFixed(1)} lb`:"—";
+  const steps=Object.values(logs).map(l=>parseInt(l.steps)).filter(Boolean);
+  document.getElementById("avgSteps").textContent=steps.length?Math.round(steps.reduce((a,b)=>a+b,0)/steps.length).toLocaleString():"—";
+  let done=0;for(let i=1;i<=30;i++)if(workoutCompleted(i))done++;
+  document.getElementById("workoutsDone").textContent=done;
+}
+function openExtra(){document.getElementById("extraModal").classList.add("show");renderExtras()}
+function renderExtras(){
+  const day=currentDay(), list=document.getElementById("extraList"), ex=getLog(day).extras||[];
+  list.innerHTML=ex.length?ex.map((e,i)=>`<div class="row" style="padding:8px 0"><div><b>${e.name}</b><div class="mealMeta">${e.cal} kcal · ${e.p||0}g protein</div></div><button class="btn ghost" onclick="removeExtra(${i})">Remove</button></div>`).join(""):`<div class="note">No extras logged today.</div>`;
+}
+function saveExtra(){
+  const name=document.getElementById("extraName").value.trim()||"Extra item", cal=Number(document.getElementById("extraCalories").value)||0, p=Number(document.getElementById("extraProtein").value)||0;
+  if(cal<=0)return alert("Enter calories for the extra item.");
+  getLog(currentDay()).extras.push({name,cal,p});saveLogs();document.getElementById("extraName").value="";document.getElementById("extraCalories").value="";document.getElementById("extraProtein").value="";
+  renderExtras();renderToday();
+}
+function removeExtra(i){getLog(currentDay()).extras.splice(i,1);saveLogs();renderExtras();renderToday()}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+function openSettings(){
+  ["StartDate","StartWeight","GoalWeight","MilestoneWeight","TrainingCalories","RestCalories","Protein"].forEach(k=>{
+    const map={StartDate:"startDate",StartWeight:"startWeight",GoalWeight:"goalWeight",MilestoneWeight:"milestoneWeight",TrainingCalories:"trainingCalories",RestCalories:"restCalories",Protein:"protein"};
+    document.getElementById("set"+k).value=settings[map[k]];
+  });
+  document.getElementById("settingsModal").classList.add("show");
+}
+function saveSettings(){
+  const sw=Number(document.getElementById("setStartWeight").value);
+  const gw=Number(document.getElementById("setGoalWeight").value);
+  const mw=Number(document.getElementById("setMilestoneWeight").value);
+  if(!sw || !gw || !mw) return alert("Please enter starting weight, ultimate goal, and 30-day milestone.");
+  settings.startDate=document.getElementById("setStartDate").value||settings.startDate;
+  settings.startWeight=sw;
+  settings.goalWeight=gw;
+  settings.milestoneWeight=mw;
+  settings.trainingCalories=Number(document.getElementById("setTrainingCalories").value)||settings.trainingCalories;
+  settings.restCalories=Number(document.getElementById("setRestCalories").value)||settings.restCalories;
+  settings.protein=Number(document.getElementById("setProtein").value)||settings.protein;
+  saveSettingsStore();closeModal("settingsModal");renderAll();
+}
+function switchView(id,btn){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");
+  const titles={today:"Today",plan:"30-Day Plan",workouts:"Workouts",meals:"Meals & Prep",progress:"Progress"};
+  document.getElementById("headerTitle").textContent=titles[id];
+  document.getElementById("headerDate").textContent=id==="today"?fmtDate(dateForDay(currentDay())):"30-Day Journey";
+  if(id==="progress")renderProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({settings,logs},null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="30-day-weight-journey-backup.json";a.click();URL.revokeObjectURL(a.href);
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(d.settings)settings=d.settings;if(d.logs)logs=d.logs;saveSettingsStore();saveLogs();renderAll();alert("Backup imported.");}catch(e){alert("That file could not be imported.")}};
+  r.readAsText(f);
+}
+function renderAll(){
+  renderToday();renderDayStrip();renderPlanDay(selectedDay);renderWorkoutLibrary();renderMeals();renderProgress();
+}
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}));
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+renderAll();
+if(!hadSavedSettings){
+  setTimeout(()=>{
+    openSettings();
+    const sheet=document.querySelector("#settingsModal .sheet h2");
+    if(sheet) sheet.textContent="First-time setup";
+  },150);
+}
+</script>
+</body>
+</html>
